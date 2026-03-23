@@ -72,17 +72,18 @@ class AttackExecutor:
         try:
             if isinstance(case.payload, list):
                 # Multi-turn: send messages sequentially
-                response_text = ""
+                all_responses = []
                 state = dict(initial_state)
                 for turn_msg in case.payload:
                     state["messages"] = state.get("messages", []) + [HumanMessage(content=turn_msg)]
                     result = self.agent.invoke(state)
                     state = result
-                    # Get last AI message
+                    # Collect all non-user messages from this turn
                     msgs = result.get("messages", [])
-                    ai_msgs = [m for m in msgs if hasattr(m, "content") and not isinstance(m, HumanMessage)]
-                    if ai_msgs:
-                        response_text = ai_msgs[-1].content
+                    for m in msgs:
+                        if hasattr(m, "content") and m.content and not isinstance(m, HumanMessage):
+                            all_responses.append(m.content)
+                response_text = " ".join(all_responses)
             else:
                 # Single-turn
                 state = dict(initial_state)
