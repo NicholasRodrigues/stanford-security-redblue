@@ -25,12 +25,14 @@ class EvaluationRunner:
         model: str = "openai/gpt-4o-mini",
         mock_response: LLMResponse | None = None,
         max_per_category: int | None = None,
+        llm_judge=None,
     ):
         self.db = db
         self.sandbox = sandbox
         self.model = model
         self.mock_response = mock_response
         self.max_per_category = max_per_category
+        self.llm_judge = llm_judge
         self.generator = PayloadGenerator()
 
     def run_baseline(self, categories: list[str] | None = None) -> EvaluationReport:
@@ -65,13 +67,21 @@ class EvaluationRunner:
         else:
             cases = self.generator.generate_all()
 
-        single_turn_cases = [c for c in cases if isinstance(c.payload, str) and not c.injected_data]
-
         if self.max_per_category:
-            single_turn_cases = self._limit_per_category(single_turn_cases, self.max_per_category)
+            cases = self._limit_per_category(cases, self.max_per_category)
 
-        executor = AttackExecutor(agent, self.db, self.sandbox)
-        scored_results = executor.run_and_score(single_turn_cases)
+        initial_state = {
+            "messages": [],
+            "user_role": "public",
+            "db_path": ":memory:",
+            "sandbox_path": str(self.sandbox.root),
+        }
+        if agent_type == "defended":
+            initial_state["blocked"] = False
+            initial_state["block_reason"] = ""
+
+        executor = AttackExecutor(agent, self.db, self.sandbox, llm_judge=self.llm_judge)
+        scored_results = executor.run_and_score(cases, initial_state=initial_state)
 
         return build_report(agent_type, scored_results)
 

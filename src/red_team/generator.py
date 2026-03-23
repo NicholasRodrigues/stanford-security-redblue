@@ -12,6 +12,7 @@ from src.red_team.payloads import (
     context_manipulation,
     multi_turn,
     indirect_injection,
+    side_channel,
 )
 
 
@@ -34,6 +35,7 @@ ALL_CATEGORIES = {
     "context_manipulation": context_manipulation,
     "multi_turn": multi_turn,
     "indirect_injection": indirect_injection,
+    "side_channel": side_channel,
 }
 
 

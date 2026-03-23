@@ -27,17 +27,18 @@ class AttackResult:
 class AttackExecutor:
     """Executes attack cases against an agent graph."""
 
-    def __init__(self, agent, db=None, sandbox=None):
+    def __init__(self, agent, db=None, sandbox=None, llm_judge=None):
         """
         Args:
             agent: Compiled LangGraph agent.
             db: Optional DatabaseManager for resetting between attacks.
             sandbox: Optional Sandbox for indirect injection setup.
+            llm_judge: Optional LLMJudge for enhanced scoring.
         """
         self.agent = agent
         self.db = db
         self.sandbox = sandbox
-        self.scorer = AttackScorer()
+        self.scorer = AttackScorer(llm_judge=llm_judge)
 
     def _setup_indirect_injection(self, case: AttackCase) -> None:
         """Inject malicious data for indirect injection attacks."""
