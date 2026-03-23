@@ -63,7 +63,7 @@ def _call_litellm(model: str, messages: list[dict], tools: Optional[list] = None
 
 def completion(
     messages: list[dict],
-    model: str = "openai/gpt-4o-mini",
+    model: str = "openai/gpt-4.1-nano",
     tools: Optional[list] = None,
     mock_response: Optional[LLMResponse] = None,
     **kwargs,

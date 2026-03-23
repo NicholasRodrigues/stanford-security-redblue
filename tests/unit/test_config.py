@@ -11,7 +11,7 @@ class TestSettings:
         import src.config.settings as mod
         mod._settings = None
         s = mod.get_settings()
-        assert s.default_model == "openai/gpt-4o-mini"
+        assert s.default_model == "openai/gpt-4.1-nano"
 
     def test_override_model(self):
         import src.config.settings as mod
@@ -45,11 +45,11 @@ class TestSettings:
 class TestModelRegistry:
     def test_resolve_fast(self):
         from src.config.models import resolve_model
-        assert resolve_model("fast") == "openai/gpt-4o-mini"
+        assert resolve_model("fast") == "openai/gpt-4.1-nano"
 
     def test_resolve_smart(self):
         from src.config.models import resolve_model
-        assert resolve_model("smart") == "anthropic/claude-sonnet-4-20250514"
+        assert resolve_model("smart") == "openai/gpt-4.1-mini"
 
     def test_resolve_local(self):
         from src.config.models import resolve_model

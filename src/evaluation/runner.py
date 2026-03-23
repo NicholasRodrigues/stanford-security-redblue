@@ -12,7 +12,7 @@ from src.data.db import DatabaseManager
 from src.evaluation.metrics import EvaluationReport, build_report
 from src.red_team.executor import AttackExecutor
 from src.red_team.generator import AttackCase, PayloadGenerator
-from src.red_team.scorer import ScoredResult
+from src.red_team.scorer import ScoredResult  # noqa: F401 — re-exported for consumers
 
 
 class EvaluationRunner:
@@ -22,7 +22,7 @@ class EvaluationRunner:
         self,
         db: DatabaseManager,
         sandbox: Sandbox,
-        model: str = "openai/gpt-4o-mini",
+        model: str = "openai/gpt-4.1-nano",
         mock_response: LLMResponse | None = None,
         max_per_category: int | None = None,
         llm_judge=None,

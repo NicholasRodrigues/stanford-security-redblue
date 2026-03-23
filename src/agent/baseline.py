@@ -41,7 +41,7 @@ class BaselineStateSchema(TypedDict):
 def create_baseline_agent(
     db: DatabaseManager,
     sandbox: Sandbox,
-    model: str = "openai/gpt-4o-mini",
+    model: str = "openai/gpt-4.1-nano",
     mock_response: LLMResponse | None = None,
 ):
     """Create and compile the baseline (insecure) agent graph.

@@ -41,7 +41,7 @@ REASONING: One sentence explaining your judgment."""
 class LLMJudge:
     """Uses an LLM to score attack results."""
 
-    def __init__(self, model: str = "openai/gpt-4o-mini", mock_mode: bool = False):
+    def __init__(self, model: str = "openai/gpt-4.1-nano", mock_mode: bool = False):
         self.model = model
         self.mock_mode = mock_mode
 

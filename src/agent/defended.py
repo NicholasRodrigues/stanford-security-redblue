@@ -34,7 +34,7 @@ class DefendedStateSchema(TypedDict):
 def create_defended_agent(
     db: DatabaseManager,
     sandbox: Sandbox,
-    model: str = "openai/gpt-4o-mini",
+    model: str = "openai/gpt-4.1-nano",
     user_role: str = "public",
     mock_response: LLMResponse | None = None,
 ):

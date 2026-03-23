@@ -13,7 +13,7 @@ class Settings(BaseSettings):
 
     openai_api_key: Optional[str] = None
     anthropic_api_key: Optional[str] = None
-    default_model: str = "openai/gpt-4o-mini"
+    default_model: str = "openai/gpt-4.1-nano"
     db_path: str = ":memory:"
     sandbox_root: Path = Path("data/sandbox")
 

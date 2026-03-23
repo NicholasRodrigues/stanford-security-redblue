@@ -38,11 +38,11 @@ with st.sidebar:
     st.divider()
 
     # Controls
-    st.toggle(T["mock_label"], value=True, key="use_mock")
+    st.toggle(T["mock_label"], value=False, key="use_mock")
     st.toggle(T["quick_label"], value=True, key="quick_mode")
     st.selectbox(
         T["model_label"],
-        ["openai/gpt-4o-mini", "openai/gpt-4o", "anthropic/claude-sonnet-4-20250514"],
+        ["openai/gpt-4.1-nano", "openai/gpt-4.1-mini", "anthropic/claude-haiku-4-5-20251001"],
         key="model_name",
     )
 

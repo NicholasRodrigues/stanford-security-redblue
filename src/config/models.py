@@ -1,8 +1,9 @@
 """LiteLLM model registry mapping logical names to provider model strings."""
 
 MODEL_REGISTRY: dict[str, str] = {
-    "fast": "openai/gpt-4o-mini",
-    "smart": "anthropic/claude-sonnet-4-20250514",
+    "fast": "openai/gpt-4.1-nano",
+    "smart": "openai/gpt-4.1-mini",
+    "haiku": "anthropic/claude-haiku-4-5-20251001",
     "local": "ollama/llama3.2",
 }
 

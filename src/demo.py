@@ -29,7 +29,7 @@ def cli():
 
 @cli.command()
 @click.option("--mode", type=click.Choice(["baseline", "defended"]), default="baseline")
-@click.option("--model", default="openai/gpt-4o-mini", help="LiteLLM model string")
+@click.option("--model", default="openai/gpt-4.1-nano", help="LiteLLM model string")
 def chat(mode, model):
     """Interactive chat with the agent."""
     from langchain_core.messages import HumanMessage
@@ -92,7 +92,7 @@ def chat(mode, model):
 @cli.command()
 @click.option("--live", is_flag=True, help="Show real-time attack results")
 @click.option("--category", default=None, help="Run specific attack category only")
-@click.option("--model", default="openai/gpt-4o-mini", help="LiteLLM model string")
+@click.option("--model", default="openai/gpt-4.1-nano", help="LiteLLM model string")
 @click.option("--mock", is_flag=True, help="Use mock LLM (for demo without API keys)")
 @click.option("--quick", is_flag=True, help="Run only 3 attacks per category (faster demo)")
 def attack(live, category, model, mock, quick):
@@ -156,7 +156,7 @@ def attack(live, category, model, mock, quick):
 
 
 @cli.command()
-@click.option("--model", default="openai/gpt-4o-mini", help="LiteLLM model string")
+@click.option("--model", default="openai/gpt-4.1-nano", help="LiteLLM model string")
 @click.option("--mock", is_flag=True, help="Use mock LLM (for demo without API keys)")
 @click.option("--quick", is_flag=True, help="Run only 3 attacks per category (faster)")
 def report(model, mock, quick):
@@ -203,7 +203,7 @@ def report(model, mock, quick):
 
 
 @cli.command()
-@click.option("--model", default="openai/gpt-4o-mini", help="LiteLLM model string")
+@click.option("--model", default="openai/gpt-4.1-nano", help="LiteLLM model string")
 @click.option("--mock", is_flag=True, help="Use mock LLM")
 def compare_cmd(model, mock):
     """Side-by-side comparison: same attack against baseline vs defended."""

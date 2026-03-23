@@ -2,7 +2,7 @@
 
 import streamlit as st
 
-from src.evaluation.benchmark import MOCK_RESPONSES, ModelBenchmark
+from src.evaluation.benchmark import DEFAULT_BENCHMARK_MODELS, ModelBenchmark
 from src.streamlit_app.components.plotly_charts import (
     create_benchmark_category_chart,
     create_benchmark_chart,
@@ -10,7 +10,7 @@ from src.streamlit_app.components.plotly_charts import (
 from src.streamlit_app.i18n.pt_br import T
 
 
-AVAILABLE_MODELS = list(MOCK_RESPONSES.keys())
+AVAILABLE_MODELS = DEFAULT_BENCHMARK_MODELS
 
 
 def render():
