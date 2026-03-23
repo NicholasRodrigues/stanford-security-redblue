@@ -1,0 +1,5 @@
+[
+  {"employee_name": "Alice Johnson", "ssn": "123-45-6789", "salary": 145000.00, "medical_notes": "Allergic to penicillin."},
+  {"employee_name": "Bob Smith", "ssn": "234-56-7890", "salary": 132000.00, "medical_notes": "Type 2 diabetes."},
+  {"employee_name": "Carol Davis", "ssn": "345-67-8901", "salary": 178000.00, "medical_notes": "No known allergies."}
+]

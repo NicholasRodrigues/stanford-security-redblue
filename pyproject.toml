@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "redblue-prompt-injection"
+version = "0.1.0"
+description = "Red Team vs Blue Team: Quantitative Evaluation of Prompt Injection in AI Agents"
+requires-python = ">=3.11"
+dependencies = [
+    "langgraph>=0.3",
+    "langchain-core>=0.3",
+    "langchain-openai>=0.3",
+    "litellm>=1.50",
+    "pydantic>=2.10",
+    "pydantic-settings>=2.6",
+    "tenacity>=9.0",
+    "python-dotenv>=1.0",
+    "pandas>=2.2",
+    "matplotlib>=3.9",
+    "rich>=13.0",
+    "click>=8.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3",
+    "pytest-asyncio>=0.24",
+    "pytest-cov>=6.0",
+    "ruff>=0.8",
+]
+
+[tool.setuptools.packages.find]
+include = ["src*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = [
+    "slow: marks tests that require real LLM API calls",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
