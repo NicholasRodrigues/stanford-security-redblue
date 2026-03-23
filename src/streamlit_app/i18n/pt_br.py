@@ -19,21 +19,14 @@ T = {
 
     # Overview
     "hero_title": "Red Team vs Blue Team",
-    "hero_subtitle": "Avaliacao Quantitativa de Seguranca em Agentes de IA com Prompt Injection",
-    "what_is_title": "O Que E Prompt Injection?",
-    "what_is_text": (
-        "Prompt Injection e uma classe de vulnerabilidade onde um atacante manipula "
-        "as instrucoes de um modelo de linguagem (LLM) para que ele execute acoes nao autorizadas. "
-        "Similar a SQL Injection em aplicacoes web, o atacante injeta instrucoes maliciosas "
-        "que sobrescrevem o comportamento pretendido do sistema."
-    ),
+    "hero_subtitle": "Avaliacao Quantitativa de Prompt Injection em Agentes de IA",
     "arch_title": "Arquitetura do Sistema",
     "attacks_section": "Categorias de Ataque (Red Team)",
     "defenses_section": "Camadas de Defesa (Blue Team)",
 
     # Arena
     "arena_title": "Arena Interativa",
-    "arena_subtitle": "Digite um ataque e compare a resposta do agente baseline vs defendido",
+    "arena_subtitle": "",
     "baseline_header": "\U0001f534 BASELINE (Sem Defesas)",
     "defended_header": "\U0001f7e2 DEFENDIDO (Blue Team Ativo)",
     "chat_placeholder": "Digite seu prompt de ataque...",
@@ -46,7 +39,7 @@ T = {
 
     # Attack Suite
     "suite_title": "Suite Automatizada de Ataques",
-    "suite_subtitle": "Execute todos os ataques contra baseline e defendido, com resultados em tempo real",
+    "suite_subtitle": "",
     "run_button": "\u25b6\ufe0f Executar Ataques",
     "stop_button": "\u23f9\ufe0f Parar",
     "phase1_label": "Fase 1: Atacando BASELINE (sem defesas)...",
@@ -60,7 +53,7 @@ T = {
 
     # Multi-Turn
     "multi_turn_title": "Ataques Multi-Turn",
-    "multi_turn_subtitle": "Visualize as fases de reconhecimento, enumeracao e exfiltracao",
+    "multi_turn_subtitle": "",
     "phase_recon": "\U0001f50d Reconhecimento",
     "phase_enum": "\U0001f4cb Enumeracao",
     "phase_exfil": "\U0001f480 Exfiltracao",
@@ -71,13 +64,13 @@ T = {
 
     # Benchmark
     "bench_title": "Benchmark de Modelos",
-    "bench_subtitle": "Compare a taxa de sucesso de ataques entre diferentes LLMs",
+    "bench_subtitle": "",
     "bench_run": "\u25b6\ufe0f Executar Benchmark",
     "bench_models": "Modelos para comparar:",
 
     # Report
     "report_title": "Relatorio de Avaliacao",
-    "report_subtitle": "Metricas e graficos interativos da avaliacao de seguranca",
+    "report_subtitle": "",
     "baseline_asr": "ASR Baseline",
     "defended_asr": "ASR Defendido",
     "asr_reduction": "Reducao de ASR",

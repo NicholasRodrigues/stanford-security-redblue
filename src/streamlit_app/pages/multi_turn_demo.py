@@ -9,7 +9,7 @@ from src.red_team.payloads import multi_turn as mt_payloads
 from src.red_team.payloads import indirect_injection as ii_payloads
 from src.red_team.scorer import AttackScorer
 from src.streamlit_app.i18n.pt_br import T
-from src.streamlit_app.state import get_mock_responses, reset_db
+from src.streamlit_app.state import get_mock_responses
 
 PHASE_LABELS = [T["phase_recon"], T["phase_enum"], T["phase_exfil"]]
 

@@ -18,7 +18,7 @@ class DatabaseManager:
 
     def connect(self) -> sqlite3.Connection:
         if self.conn is None:
-            self.conn = sqlite3.connect(self.path)
+            self.conn = sqlite3.connect(self.path, check_same_thread=False)
             self.conn.row_factory = sqlite3.Row
         return self.conn
 

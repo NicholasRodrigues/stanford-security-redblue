@@ -7,6 +7,54 @@ from src.streamlit_app.concepts.mapping import ATTACK_CONCEPTS, DEFENSE_CONCEPTS
 from src.streamlit_app.i18n.pt_br import T
 
 
+# Architecture diagram as graphviz (works natively in Streamlit)
+ARCH_DOT = """
+digraph {
+    rankdir=LR
+    bgcolor="transparent"
+    node [shape=box, style="filled,rounded", fontcolor=white, fontname="Helvetica", fontsize=12, margin="0.3,0.2"]
+    edge [color="#6b7280", fontcolor="#9ca3af", fontname="Helvetica", fontsize=10]
+
+    RT [label="Red Team\n7 categorias\n~90 ataques", fillcolor="#7f1d1d", color="#ef4444"]
+    AG [label="Agente LLM\n+ Tools\n(SQLite, Files)", fillcolor="#1e3a5f", color="#3b82f6"]
+    BT [label="Blue Team\n6 camadas\nde defesa", fillcolor="#14532d", color="#22c55e"]
+    EV [label="Avaliacao\nASR, FPR\npor categoria", fillcolor="#3b0764", color="#8b5cf6"]
+
+    RT -> AG [label=" Prompt Injection"]
+    AG -> BT [label=" Resposta"]
+    BT -> EV [label=" Metricas"]
+}
+"""
+
+DEFENSE_DOT = """
+digraph {
+    rankdir=LR
+    bgcolor="transparent"
+    node [shape=box, style="filled,rounded", fontcolor=white, fontname="Helvetica", fontsize=11, margin="0.2,0.15"]
+    edge [color="#6b7280", fontcolor="#9ca3af", fontname="Helvetica", fontsize=9]
+
+    IN [label="Input", fillcolor="#374151", color="#6b7280"]
+    IG [label="Input Guard\nInput Filter +\nSemantic Guard", fillcolor="#14532d", color="#22c55e"]
+    LLM [label="LLM\nSandwich Defense +\nInstruction Hierarchy", fillcolor="#1e3a5f", color="#3b82f6"]
+    PC [label="Permission Check\nRBAC + Anomaly", fillcolor="#713f12", color="#f59e0b"]
+    TOOLS [label="Tools\nDB Query\nFile Read/Write", fillcolor="#1e3a5f", color="#3b82f6"]
+    OG [label="Output Guard\nDLP Filter", fillcolor="#14532d", color="#22c55e"]
+    OUT [label="Resposta\nSegura", fillcolor="#374151", color="#6b7280"]
+    BLOCK [label="Bloqueado", fillcolor="#7f1d1d", color="#ef4444"]
+    DENY [label="Acesso\nNegado", fillcolor="#7f1d1d", color="#ef4444"]
+
+    IN -> IG
+    IG -> LLM [label=" OK"]
+    IG -> BLOCK [label=" Bloqueado"]
+    LLM -> PC
+    PC -> TOOLS [label=" OK"]
+    PC -> DENY [label=" Negado"]
+    TOOLS -> OG
+    OG -> OUT
+}
+"""
+
+
 def render():
     # Hero
     st.markdown(f"""
@@ -20,51 +68,12 @@ def render():
 
     st.divider()
 
-    # What is Prompt Injection
-    st.header(T["what_is_title"])
-    st.write(T["what_is_text"])
-
-    st.divider()
-
-    # Architecture diagram
+    # Architecture
     st.header(T["arch_title"])
-    st.markdown("""
-```mermaid
-graph LR
-    RT["🔴 Red Team<br/>7 categorias<br/>~90 ataques"] --> |"Prompt<br/>Injection"| AG["🤖 Agente LLM<br/>+ Tools<br/>(SQLite, Files)"]
-    AG --> |"Resposta"| BT["🟢 Blue Team<br/>6 camadas<br/>de defesa"]
-    BT --> |"Metricas"| EV["📊 Avaliacao<br/>ASR, FPR<br/>por categoria"]
+    st.graphviz_chart(ARCH_DOT)
 
-    style RT fill:#7f1d1d,stroke:#ef4444,color:#fff
-    style AG fill:#1e3a5f,stroke:#3b82f6,color:#fff
-    style BT fill:#14532d,stroke:#22c55e,color:#fff
-    style EV fill:#3b0764,stroke:#8b5cf6,color:#fff
-```
-    """)
-
-    # Defense pipeline
-    st.subheader("Pipeline de Defesa (Agente Defendido)")
-    st.markdown("""
-```mermaid
-graph LR
-    IN["📥 Input"] --> IG["🛡️ Input Guard<br/>Input Filter +<br/>Semantic Guard"]
-    IG -->|"Liberado"| LLM["🤖 LLM<br/>Sandwich Defense +<br/>Instruction Hierarchy"]
-    IG -->|"Bloqueado"| BLOCK["🚫 Bloqueado"]
-    LLM --> PC["🔑 Permission<br/>Check<br/>RBAC + Anomaly"]
-    PC -->|"Autorizado"| TOOLS["⚙️ Tools<br/>DB Query,<br/>File Read/Write"]
-    PC -->|"Negado"| DENY["❌ Acesso Negado"]
-    TOOLS --> OG["🔍 Output Guard<br/>DLP Filter"]
-    OG --> OUT["📤 Resposta<br/>Segura"]
-
-    style IG fill:#14532d,stroke:#22c55e,color:#fff
-    style LLM fill:#1e3a5f,stroke:#3b82f6,color:#fff
-    style PC fill:#713f12,stroke:#f59e0b,color:#fff
-    style TOOLS fill:#1e3a5f,stroke:#3b82f6,color:#fff
-    style OG fill:#14532d,stroke:#22c55e,color:#fff
-    style BLOCK fill:#7f1d1d,stroke:#ef4444,color:#fff
-    style DENY fill:#7f1d1d,stroke:#ef4444,color:#fff
-```
-    """)
+    st.subheader("Pipeline de Defesa")
+    st.graphviz_chart(DEFENSE_DOT)
 
     st.divider()
 

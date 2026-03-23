@@ -22,11 +22,20 @@ QUICK_ATTACKS = {
 }
 
 
+def _fresh_db():
+    """Create a fresh in-memory DB for this invocation (thread-safe)."""
+    from src.data.db import DatabaseManager
+    db = DatabaseManager(":memory:")
+    db.initialize()
+    db.seed()
+    return db
+
+
 def _run_against_agents(user_input: str):
     """Run input against both agents and show results."""
-    db = st.session_state.db
+    db = _fresh_db()
     sandbox = st.session_state.sandbox
-    model = st.session_state.get("model_name", "openai/gpt-4o-mini")
+    model = st.session_state.get("model_name", "openai/gpt-4.1-nano")
     baseline_mock, defended_mock = get_mock_responses()
 
     baseline_agent = create_baseline_agent(db, sandbox, model=model, mock_response=baseline_mock)

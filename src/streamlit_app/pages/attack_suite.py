@@ -10,13 +10,24 @@ from src.red_team.executor import AttackExecutor
 from src.red_team.generator import PayloadGenerator
 from src.red_team.llm_judge import LLMJudge
 from src.streamlit_app.i18n.pt_br import T
-from src.streamlit_app.state import get_mock_responses, reset_db
+from src.streamlit_app.state import get_mock_responses
+
+
+def _fresh_db():
+    """Create a fresh in-memory DB (thread-safe)."""
+    from src.data.db import DatabaseManager
+    db = DatabaseManager(":memory:")
+    db.initialize()
+    db.seed()
+    return db
 
 
 def _run_phase(agent, agent_type: str, cases: list, phase_label: str):
     """Run attacks against an agent with live progress updates."""
+    db = _fresh_db()
+    sandbox = st.session_state.sandbox
     scorer_judge = LLMJudge(mock_mode=True)
-    executor = AttackExecutor(agent, st.session_state.db, st.session_state.sandbox, llm_judge=scorer_judge)
+    executor = AttackExecutor(agent, db, sandbox, llm_judge=scorer_judge)
 
     initial_state = {
         "messages": [],
@@ -33,7 +44,8 @@ def _run_phase(agent, agent_type: str, cases: list, phase_label: str):
     status_container = st.empty()
 
     for i, case in enumerate(cases):
-        reset_db()
+        db.reset()
+        db.seed()
 
         raw = executor.run_single(case, initial_state=dict(initial_state))
         scored = executor.scorer.score(
@@ -91,13 +103,17 @@ def render():
 
     if st.button(T["run_button"], type="primary", use_container_width=True):
         baseline_mock, defended_mock = get_mock_responses()
-        model = st.session_state.get("model_name", "openai/gpt-4o-mini")
+        model = st.session_state.get("model_name", "openai/gpt-4.1-nano")
+
+        # Fresh DBs for each phase (thread-safe)
+        db1 = _fresh_db()
+        db2 = _fresh_db()
+        sandbox = st.session_state.sandbox
 
         # Phase 1: Baseline
         st.subheader("\U0001f534 " + T["phase1_label"])
         baseline_agent = create_baseline_agent(
-            st.session_state.db, st.session_state.sandbox,
-            model=model, mock_response=baseline_mock,
+            db1, sandbox, model=model, mock_response=baseline_mock,
         )
         baseline_report = _run_phase(baseline_agent, "baseline", cases, T["phase1_label"])
         st.session_state.baseline_report = baseline_report
@@ -105,8 +121,7 @@ def render():
         # Phase 2: Defended
         st.subheader("\U0001f7e2 " + T["phase2_label"])
         defended_agent = create_defended_agent(
-            st.session_state.db, st.session_state.sandbox,
-            model=model, user_role="public", mock_response=defended_mock,
+            db2, sandbox, model=model, user_role="public", mock_response=defended_mock,
         )
         defended_report = _run_phase(defended_agent, "defended", cases, T["phase2_label"])
         st.session_state.defended_report = defended_report
