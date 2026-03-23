@@ -1,7 +1,10 @@
-.PHONY: install test demo report clean
+.PHONY: install install-ui test demo report streamlit clean
 
 install:
 	pip install -e ".[dev]"
+
+install-ui:
+	pip install -e ".[dev,ui]"
 
 test:
 	pytest tests/unit tests/integration -v --tb=short
@@ -14,6 +17,9 @@ demo:
 
 report:
 	python -m src.demo report
+
+streamlit:
+	streamlit run src/streamlit_app/app.py
 
 clean:
 	rm -rf data/results/*.png data/results/*.pdf data/results/*.json data/results/*.md
