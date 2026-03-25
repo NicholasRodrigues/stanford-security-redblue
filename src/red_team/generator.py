@@ -13,6 +13,7 @@ from src.red_team.payloads import (
     multi_turn,
     indirect_injection,
     side_channel,
+    portuguese,
 )
 
 
@@ -36,6 +37,7 @@ ALL_CATEGORIES = {
     "multi_turn": multi_turn,
     "indirect_injection": indirect_injection,
     "side_channel": side_channel,
+    "portuguese": portuguese,
 }
 
 
