@@ -1,4 +1,4 @@
-.PHONY: install install-ui test demo report streamlit precompute clean
+.PHONY: install install-ui test demo report streamlit precompute benchmark-smoke benchmark-full clean
 
 install:
 	pip install -e ".[dev]"
@@ -23,6 +23,12 @@ streamlit:
 
 precompute:
 	python -m src.evaluation.precompute
+
+benchmark-smoke:
+	python -m src.evaluation.full_benchmark --smoke
+
+benchmark-full:
+	python -m src.evaluation.full_benchmark --full
 
 clean:
 	rm -rf data/results/*.png data/results/*.pdf data/results/*.json data/results/*.md
