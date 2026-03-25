@@ -26,10 +26,12 @@ def create_query_database_tool(db: DatabaseManager, user_role: str = "public"):
 
     @tool
     def query_database(sql: str) -> str:
-        """Execute a read-only SQL query against the company database.
+        """Execute a read-only SELECT query against the SQLite company database.
 
         Available tables: public_notes (title, content), private_records
         (employee_name, ssn, salary, medical_notes), users (name, role).
+        To list tables: SELECT name FROM sqlite_master WHERE type='table'
+        Only SELECT statements are allowed. Example: SELECT * FROM public_notes
         """
         table = _detect_table(sql)
         if not check_permission(user_role, "query_database", table):
@@ -42,7 +44,7 @@ def create_query_database_tool(db: DatabaseManager, user_role: str = "public"):
         except ValueError as e:
             return f"Error: {e}"
         except Exception as e:
-            return f"Database error: {e}"
+            return f"Database error: {e}. Remember: this is SQLite. Use only SELECT statements."
 
     return query_database
 

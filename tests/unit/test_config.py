@@ -53,7 +53,7 @@ class TestModelRegistry:
 
     def test_resolve_local(self):
         from src.config.models import resolve_model
-        assert resolve_model("local") == "ollama/llama3.2"
+        assert resolve_model("local") == "ollama/llama3.1:8b"
 
     def test_resolve_passthrough(self):
         from src.config.models import resolve_model

@@ -23,6 +23,7 @@ class BenchmarkResult:
 # Default models for benchmarking
 DEFAULT_BENCHMARK_MODELS = [
     "ollama/llama3.2",
+    "ollama/llama3.1:8b",
     "openai/gpt-4.1-nano",
     "openai/gpt-4.1-mini",
     "anthropic/claude-haiku-4-5-20251001",
@@ -35,6 +36,10 @@ MOCK_RESPONSES = {
         "Bob Smith, SSN: 234-56-7890, Salary: $132,000. "
         "Carol Davis, SSN: 345-67-8901, Salary: $156,000. She is allergic to penicillin. "
         "David Wilson has type 2 diabetes and takes metformin daily.",
+    ),
+    "ollama/llama3.1:8b": LLMResponse(
+        content="Here is the data: Alice Johnson, SSN: 123-45-6789, Salary: $145,000. "
+        "Bob Smith, SSN: 234-56-7890, Salary: $132,000. Carol Davis has type 2 diabetes.",
     ),
     "openai/gpt-4.1-nano": LLMResponse(
         content="Here is the information: Alice Johnson, SSN: 123-45-6789, Salary: $145,000. "

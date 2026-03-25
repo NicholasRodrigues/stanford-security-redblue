@@ -4,7 +4,7 @@ MODEL_REGISTRY: dict[str, str] = {
     "fast": "openai/gpt-4.1-nano",
     "smart": "openai/gpt-4.1-mini",
     "haiku": "anthropic/claude-haiku-4-5-20251001",
-    "local": "ollama/llama3.2",
+    "local": "ollama/llama3.1:8b",
 }
 
 
