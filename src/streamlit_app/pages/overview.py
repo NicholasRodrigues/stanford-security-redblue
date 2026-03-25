@@ -2,7 +2,7 @@
 
 import streamlit as st
 
-from src.streamlit_app.components.concept_cards import render_concept_grid
+from src.streamlit_app.components.concept_cards import render_attack_grid, render_defense_grid
 from src.streamlit_app.concepts.mapping import ATTACK_CONCEPTS, DEFENSE_CONCEPTS
 from src.streamlit_app.i18n.pt_br import T
 
@@ -78,6 +78,6 @@ def render():
     st.divider()
 
     # Concept cards
-    render_concept_grid(ATTACK_CONCEPTS, T["attacks_section"])
+    render_attack_grid(ATTACK_CONCEPTS, T["attacks_section"])
     st.divider()
-    render_concept_grid(DEFENSE_CONCEPTS, T["defenses_section"])
+    render_defense_grid(DEFENSE_CONCEPTS, T["defenses_section"])
