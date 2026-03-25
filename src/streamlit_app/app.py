@@ -42,7 +42,7 @@ with st.sidebar:
     st.toggle(T["quick_label"], value=True, key="quick_mode")
     st.selectbox(
         T["model_label"],
-        ["openai/gpt-4.1-nano", "openai/gpt-4.1-mini", "anthropic/claude-haiku-4-5-20251001", "ollama/llama3.2"],
+        ["ollama/llama3.2", "openai/gpt-4.1-nano", "openai/gpt-4.1-mini", "anthropic/claude-haiku-4-5-20251001"],
         key="model_name",
     )
 
