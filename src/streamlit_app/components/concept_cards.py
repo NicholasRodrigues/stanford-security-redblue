@@ -6,36 +6,28 @@ import streamlit as st
 def render_attack_card(icone: str, titulo: str, analogia: str, conceitos: list[str], payloads: list[str]):
     """Render an attack concept card with expandable payloads."""
     concepts_str = " · ".join(conceitos) if conceitos else ""
-    st.markdown(f"""
-    <div class="concept-card">
-        <div class="card-icon">{icone}</div>
-        <div class="card-title">{titulo}</div>
-        <div class="card-analogy">{analogia}</div>
-        <div style="color:#6b7280; font-size:0.75rem; margin-top:0.3rem;">{concepts_str}</div>
-    </div>
-    """, unsafe_allow_html=True)
-    if payloads:
-        with st.expander("Exemplos de Payload"):
-            for i, p in enumerate(payloads):
-                st.code(p, language=None)
+    with st.container(border=True):
+        st.markdown(f"### {icone} {titulo}")
+        st.markdown(f"**{analogia}**")
+        st.caption(concepts_str)
+        if payloads:
+            with st.expander("Exemplos de Payload"):
+                for p in payloads:
+                    st.code(p, language=None)
 
 
 def render_defense_card(icone: str, titulo: str, analogia: str, conceitos: list[str], exemplo: dict):
     """Render a defense concept card with expandable example."""
     concepts_str = " · ".join(conceitos) if conceitos else ""
-    st.markdown(f"""
-    <div class="concept-card">
-        <div class="card-icon">{icone}</div>
-        <div class="card-title">{titulo}</div>
-        <div class="card-analogy">{analogia}</div>
-        <div style="color:#6b7280; font-size:0.75rem; margin-top:0.3rem;">{concepts_str}</div>
-    </div>
-    """, unsafe_allow_html=True)
-    if exemplo:
-        with st.expander("Como Funciona"):
-            st.markdown(f"**Input:** `{exemplo['input']}`")
-            st.markdown(f"**Resultado:** {exemplo['resultado']}")
-            st.caption(exemplo["como"])
+    with st.container(border=True):
+        st.markdown(f"### {icone} {titulo}")
+        st.markdown(f"**{analogia}**")
+        st.caption(concepts_str)
+        if exemplo:
+            with st.expander("Como Funciona"):
+                st.markdown(f"**Input:** `{exemplo['input']}`")
+                st.markdown(f"**Resultado:** {exemplo['resultado']}")
+                st.caption(exemplo["como"])
 
 
 def render_attack_grid(concepts: dict, section_title: str):
