@@ -186,3 +186,103 @@ def create_benchmark_category_chart(model_reports: dict) -> go.Figure:
         height=500,
     ))
     return fig
+
+
+def create_model_comparison_chart(model_stats: dict) -> go.Figure:
+    """Bar chart with error bars showing mean ASR ± CI per model.
+
+    Args:
+        model_stats: {model_name: {"mean_asr": float, "ci_low": float, "ci_high": float}}
+    """
+    models = list(model_stats.keys())
+    means = [model_stats[m]["mean_asr"] * 100 for m in models]
+    ci_lows = [model_stats[m]["ci_low"] * 100 for m in models]
+    ci_highs = [model_stats[m]["ci_high"] * 100 for m in models]
+
+    errors_low = [m - l for m, l in zip(means, ci_lows)]
+    errors_high = [h - m for m, h in zip(means, ci_highs)]
+
+    colors = ["#ef4444", "#f59e0b", "#3b82f6", "#8b5cf6", "#22c55e", "#06b6d4", "#ec4899", "#84cc16"]
+
+    fig = go.Figure()
+    fig.add_trace(go.Bar(
+        x=models, y=means,
+        marker_color=colors[:len(models)],
+        error_y=dict(type="data", symmetric=False, array=errors_high, arrayminus=errors_low, color="#e0e0e0"),
+        text=[f"{m:.1f}%" for m in means],
+        textposition="outside",
+    ))
+    fig.update_layout(**_base_layout(
+        title=dict(text="ASR por Modelo (media ± IC 95%)", font=dict(size=20)),
+        yaxis=dict(title="ASR (%)", range=[0, 115]),
+        showlegend=False,
+        height=450,
+    ))
+    return fig
+
+
+def create_ablation_heatmap(ablation_data: list[dict]) -> go.Figure:
+    """Heatmap showing ASR for each defense combination.
+
+    Args:
+        ablation_data: list of {"label": str, "asr": float, "defenses": list[str]}
+    """
+    labels = [d["label"] for d in ablation_data]
+    asrs = [d["asr"] * 100 for d in ablation_data]
+    n_layers = [len(d.get("defenses", [])) for d in ablation_data]
+
+    # Sort by ASR descending (most vulnerable first)
+    sorted_data = sorted(zip(labels, asrs, n_layers), key=lambda x: -x[1])
+    labels, asrs, n_layers = zip(*sorted_data) if sorted_data else ([], [], [])
+
+    fig = go.Figure()
+    fig.add_trace(go.Bar(
+        y=list(labels), x=list(asrs),
+        orientation="h",
+        marker=dict(
+            color=list(asrs),
+            colorscale=[[0, "#22c55e"], [0.5, "#f59e0b"], [1, "#ef4444"]],
+            showscale=True,
+            colorbar=dict(title="ASR %"),
+        ),
+        text=[f"{a:.1f}%" for a in asrs],
+        textposition="outside",
+    ))
+    fig.update_layout(**_base_layout(
+        title=dict(text="Ablacao: ASR por Combinacao de Defesas", font=dict(size=20)),
+        xaxis=dict(title="ASR (%)", range=[0, 110]),
+        height=max(400, len(labels) * 40),
+        margin=dict(l=250),
+    ))
+    return fig
+
+
+def create_category_comparison_chart(category_stats: dict) -> go.Figure:
+    """Grouped bar chart with error bars per category.
+
+    Args:
+        category_stats: {category: {"mean_asr": float, "std_asr": float, "ci_low": float, "ci_high": float}}
+    """
+    categories = sorted(category_stats.keys())
+    clean_names = [c.replace("_", " ").title() for c in categories]
+    means = [category_stats[c]["mean_asr"] * 100 for c in categories]
+    ci_lows = [category_stats[c]["ci_low"] * 100 for c in categories]
+    ci_highs = [category_stats[c]["ci_high"] * 100 for c in categories]
+
+    errors_low = [m - l for m, l in zip(means, ci_lows)]
+    errors_high = [h - m for m, h in zip(means, ci_highs)]
+
+    fig = go.Figure()
+    fig.add_trace(go.Bar(
+        x=clean_names, y=means,
+        marker_color="#ef4444",
+        error_y=dict(type="data", symmetric=False, array=errors_high, arrayminus=errors_low, color="#e0e0e0"),
+        text=[f"{m:.1f}%" for m in means],
+        textposition="outside",
+    ))
+    fig.update_layout(**_base_layout(
+        title=dict(text="ASR por Categoria (media ± IC 95%)", font=dict(size=20)),
+        yaxis=dict(title="ASR (%)", range=[0, 115]),
+        height=450,
+    ))
+    return fig
