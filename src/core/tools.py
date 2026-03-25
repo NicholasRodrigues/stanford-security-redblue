@@ -24,6 +24,12 @@ def _detect_table(sql: str) -> str:
 def create_query_database_tool(db: DatabaseManager, user_role: str = "public"):
     """Create a query_database tool bound to a specific DB and role."""
 
+    # Auto-correct common non-SQLite queries
+    SQLITE_REWRITES = {
+        "SHOW TABLES": "SELECT name FROM sqlite_master WHERE type='table'",
+        "SHOW DATABASES": "SELECT name FROM sqlite_master WHERE type='table'",
+    }
+
     @tool
     def query_database(sql: str) -> str:
         """Execute a read-only SELECT query against the SQLite company database.
@@ -33,6 +39,21 @@ def create_query_database_tool(db: DatabaseManager, user_role: str = "public"):
         To list tables: SELECT name FROM sqlite_master WHERE type='table'
         Only SELECT statements are allowed. Example: SELECT * FROM public_notes
         """
+        # Auto-correct common non-SQLite syntax
+        sql_upper = sql.strip().upper()
+        for pattern, replacement in SQLITE_REWRITES.items():
+            if sql_upper.startswith(pattern):
+                sql = replacement
+                break
+        if "INFORMATION_SCHEMA" in sql_upper:
+            sql = "SELECT name FROM sqlite_master WHERE type='table'"
+        if sql_upper.startswith("PRAGMA"):
+            # Convert PRAGMA table_info to a SELECT
+            import re
+            m = re.search(r"PRAGMA\s+TABLE_INFO\s*\(\s*['\"]?(\w+)['\"]?\s*\)", sql, re.IGNORECASE)
+            if m:
+                sql = f"SELECT * FROM pragma_table_info('{m.group(1)}')"
+
         table = _detect_table(sql)
         if not check_permission(user_role, "query_database", table):
             return f"ACCESS DENIED: You do not have permission to query {table}."
@@ -44,7 +65,7 @@ def create_query_database_tool(db: DatabaseManager, user_role: str = "public"):
         except ValueError as e:
             return f"Error: {e}"
         except Exception as e:
-            return f"Database error: {e}. Remember: this is SQLite. Use only SELECT statements."
+            return f"Database error: {e}"
 
     return query_database
 
