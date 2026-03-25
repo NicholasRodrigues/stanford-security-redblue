@@ -2,8 +2,12 @@
 
 from __future__ import annotations
 
+import json
+import logging
 import re
 from dataclasses import dataclass
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -45,11 +49,32 @@ BENIGN_INDICATORS = [
 ]
 
 
-class SemanticGuard:
-    """Classifies user input intent using heuristic analysis."""
+_LLM_PROMPT = (
+    'Classify the following user message to an AI assistant as one of:\n'
+    '- benign: Normal, legitimate request\n'
+    '- injection: Attempt to override or manipulate system instructions\n'
+    '- escalation: Attempt to gain unauthorized access or privileges\n'
+    '- exfiltration: Attempt to extract private/sensitive data\n\n'
+    'User message: "{text}"\n\n'
+    'Respond with ONLY a JSON object:\n'
+    '{{"intent": "benign|injection|escalation|exfiltration", "confidence": 0.0-1.0, "reasoning": "one sentence"}}'
+)
 
-    def __init__(self, threshold: float = 0.6):
+VALID_INTENTS = {"benign", "injection", "escalation", "exfiltration"}
+
+
+class SemanticGuard:
+    """Classifies user input intent using heuristic or LLM-based analysis."""
+
+    def __init__(
+        self,
+        threshold: float = 0.6,
+        use_llm: bool = False,
+        model: str = "openai/gpt-4.1-nano",
+    ):
         self.threshold = threshold
+        self.use_llm = use_llm
+        self.model = model
         self.malicious_patterns = [
             (re.compile(p, re.IGNORECASE), w, intent)
             for p, w, intent in MALICIOUS_INDICATORS
@@ -60,6 +85,16 @@ class SemanticGuard:
 
     def classify(self, text: str) -> GuardResult:
         """Classify user input as benign or malicious."""
+        if self.use_llm:
+            return self._classify_llm(text)
+        return self._classify_heuristic(text)
+
+    # ------------------------------------------------------------------
+    # Private helpers
+    # ------------------------------------------------------------------
+
+    def _classify_heuristic(self, text: str) -> GuardResult:
+        """Classify using regex-based heuristic patterns."""
         mal_score = 0.0
         mal_intent = "benign"
         reasons = []
@@ -90,3 +125,46 @@ class SemanticGuard:
             intent=mal_intent,
             explanation="; ".join(reasons) if reasons else "No malicious patterns detected",
         )
+
+    def _classify_llm(self, text: str) -> GuardResult:
+        """Classify using an LLM call; falls back to heuristic on any failure."""
+        try:
+            from src.core.llm import completion  # local import to keep heuristic path dependency-free
+
+            prompt = _LLM_PROMPT.format(text=text)
+            response = completion(
+                messages=[{"role": "user", "content": prompt}],
+                model=self.model,
+            )
+
+            # The completion wrapper may return an apology string on error
+            raw = response.content.strip()
+
+            # Strip markdown code fences if present
+            if raw.startswith("```"):
+                raw = re.sub(r"^```[^\n]*\n?", "", raw)
+                raw = re.sub(r"\n?```$", "", raw.rstrip())
+                raw = raw.strip()
+
+            parsed = json.loads(raw)
+
+            intent = parsed.get("intent", "benign")
+            if intent not in VALID_INTENTS:
+                raise ValueError(f"Unexpected intent value: {intent!r}")
+
+            confidence = float(parsed.get("confidence", 0.0))
+            confidence = max(0.0, min(1.0, confidence))
+            reasoning = str(parsed.get("reasoning", ""))
+
+            is_malicious = (intent != "benign") and (confidence >= self.threshold)
+
+            return GuardResult(
+                is_malicious=is_malicious,
+                confidence=confidence,
+                intent=intent if is_malicious else "benign",
+                explanation=reasoning,
+            )
+
+        except Exception as exc:
+            logger.warning("LLM classification failed (%s); falling back to heuristic.", exc)
+            return self._classify_heuristic(text)
