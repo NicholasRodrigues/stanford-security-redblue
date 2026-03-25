@@ -32,13 +32,29 @@ def init_session_state():
         st.session_state.mt_baseline_history = []
         st.session_state.mt_defended_history = []
 
+        # Load precomputed data if available
+        _load_precomputed()
+
         st.session_state.initialized = True
 
 
-def reset_db():
-    """Reset and re-seed the database."""
-    st.session_state.db.reset()
-    st.session_state.db.seed()
+def _load_precomputed():
+    """Load precomputed benchmark/comparison data into session state."""
+    from src.evaluation.loader import load_precomputed
+    data = load_precomputed()
+    if data is None:
+        return
+
+    if data.get("comparison"):
+        st.session_state.comparison = data["comparison"]
+        st.session_state.baseline_report = data["comparison"].baseline
+        st.session_state.defended_report = data["comparison"].defended
+
+    if data.get("benchmark"):
+        from src.evaluation.benchmark import BenchmarkResult
+        st.session_state.benchmark_result = BenchmarkResult(model_reports=data["benchmark"])
+
+    st.session_state.precomputed = data
 
 
 def get_mock_responses():

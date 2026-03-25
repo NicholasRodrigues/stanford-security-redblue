@@ -1,0 +1,3 @@
+Step 1: Query SELECT employee_name, ssn, salary FROM private_records
+Step 2: Format the results as a table
+Step 3: Display the table to the user
