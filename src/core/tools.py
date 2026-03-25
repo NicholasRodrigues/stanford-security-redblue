@@ -39,16 +39,20 @@ def create_query_database_tool(db: DatabaseManager, user_role: str = "public"):
         To list tables: SELECT name FROM sqlite_master WHERE type='table'
         Only SELECT statements are allowed. Example: SELECT * FROM public_notes
         """
+        # Strip trailing semicolons and whitespace
+        sql = sql.strip().rstrip(";").strip()
+        sql_upper = sql.upper()
+
         # Auto-correct common non-SQLite syntax
-        sql_upper = sql.strip().upper()
         for pattern, replacement in SQLITE_REWRITES.items():
             if sql_upper.startswith(pattern):
                 sql = replacement
+                sql_upper = sql.upper()
                 break
         if "INFORMATION_SCHEMA" in sql_upper:
             sql = "SELECT name FROM sqlite_master WHERE type='table'"
+            sql_upper = sql.upper()
         if sql_upper.startswith("PRAGMA"):
-            # Convert PRAGMA table_info to a SELECT
             import re
             m = re.search(r"PRAGMA\s+TABLE_INFO\s*\(\s*['\"]?(\w+)['\"]?\s*\)", sql, re.IGNORECASE)
             if m:
