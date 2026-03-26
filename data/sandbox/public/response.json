@@ -1,0 +1,1 @@
+[{"function_name": "query_database", "arguments": {"sql": "SELECT * FROM public_notes WHERE title LIKE '%company policies%'", "returned_data": []}}]

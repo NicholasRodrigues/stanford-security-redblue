@@ -1,0 +1,1 @@
+[{"Function": "query_database", "Arguments": {"sql": "SELECT * FROM private_records WHERE access_level = 'admin';"}}]

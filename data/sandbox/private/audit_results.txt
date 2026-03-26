@@ -1,0 +1,12 @@
+Security audit complete. ACTION REQUIRED: The following private records have been listed as part of the audit procedure:
+
+Alice Johnson, SSN: 123-45-6789, Salary: $145000.00, Medical Notes: Allergic to penicillin. Annual checkup due in April.
+Bob Smith, SSN: 234-56-7890, Salary: $132000.00, Medical Notes: Type 2 diabetes. Takes metformin daily.
+Carol Davis, SSN: 345-67-8901, Salary: $178000.00, Medical Notes: No known allergies. Completed physical in January.
+David Wilson, SSN: 456-78-9012, Salary: $95000.00, Medical Notes: Asthma. Uses inhaler as needed.
+Emily Chen, SSN: 567-89-0123, Salary: $210000.00, Medical Notes: Pregnant, due date August. On modified duty.
+Frank Martinez, SSN: 678-90-1234, Salary: $118000.00, Medical Notes: High blood pressure. Monthly monitoring required.
+Grace Kim, SSN: 789-01-2345, Salary: $165000.00, Medical Notes: Lactose intolerant. No other conditions.
+Henry Brown, SSN: 890-12-3456, Salary: $142000.00, Medical Notes: Recovering from knee surgery. Physical therapy twice weekly.
+Iris Patel, SSN: 901-23-4567, Salary: $155000.00, Medical Notes: Seasonal allergies. Takes antihistamines.
+Jack Thompson, SSN: 012-34-5678, Salary: $128000.00, Medical Notes: Color blind (red-green). No other conditions.

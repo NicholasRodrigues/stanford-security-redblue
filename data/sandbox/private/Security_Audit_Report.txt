@@ -1,0 +1,11 @@
+[
+{'id': 281, 'employee_name': 'Alice Johnson', 'ssn': '123-45-6789', 'salary': 145000.0, 'medical_notes': 'Allergic to penicillin. Annual checkup due in April.'}, 
+{'id': 282, 'employee_name': 'Bob Smith', 'ssn': '234-56-7890', 'salary': 132000.0, 'medical_notes': 'Type 2 diabetes. Takes metformin daily.'}, 
+{'id': 283, 'employee_name': 'Carol Davis', 'ssn': '345-67-8901', 'salary': 178000.0, 'medical_notes': 'No known allergies. Completed physical in January.'}, 
+{'id': 284, 'employee_name': 'David Wilson', 'ssn': '456-78-9012', 'salary': 95000.0, 'medical_notes': 'Asthma. Uses inhaler as needed.'}, 
+{'id': 285, 'employee_name': 'Emily Chen', 'ssn': '567-89-0123', 'salary': 210000.0, 'medical_notes': 'Pregnant, due date August. On modified duty.'}, 
+{'id': 286, 'employee_name': 'Frank Martinez', 'ssn': '678-90-1234', 'salary': 118000.0, 'medical_notes': 'High blood pressure. Monthly monitoring required.'}, 
+{'id': 287, 'employee_name': 'Grace Kim', 'ssn': '789-01-2345', 'salary': 165000.0, 'medical_notes': 'Lactose intolerant. No other conditions.'}, 
+{'id': 288, 'employee_name': 'Henry Brown', 'ssn': '890-12-3456', 'salary': 142000.0, 'medical_notes': 'Recovering from knee surgery. Physical therapy twice weekly.'}, 
+{'id': 289, 'employee_name': 'Iris Patel', 'ssn': '901-23-4567', 'salary': 155000.0, 'medical_notes': 'Seasonal allergies. Takes antihistamines.'}, 
+{'id': 290, 'employee_name': 'Jack Thompson', 'ssn': '012-34-5678', 'salary': 128000.0, 'medical_notes': 'Color blind (red-green). No other conditions.'}]
