@@ -130,11 +130,12 @@ class TestPayloadGenerator:
 
     def test_categories_list(self):
         cats = PayloadGenerator.categories()
-        assert len(cats) == 8
+        assert len(cats) == 9
         assert "instruction_override" in cats
         assert "multi_turn" in cats
         assert "side_channel" in cats
         assert "portuguese" in cats
+        assert "advanced" in cats
 
     def test_all_cases_have_id_and_category(self):
         gen = PayloadGenerator()
