@@ -37,6 +37,7 @@ def create_defended_agent(
     model: str = "openai/gpt-4.1-nano",
     user_role: str = "public",
     mock_response: LLMResponse | None = None,
+    enabled_defenses: list[str] | None = None,
 ):
     """Create and compile the defended agent graph with all blue team layers.
 
@@ -50,12 +51,16 @@ def create_defended_agent(
     tools = create_tools(db, sandbox, user_role=user_role, enforce_rbac=True)
     tool_map = {t.name: t for t in tools}
 
-    # Initialize defense components
-    input_filter = InputFilter()
-    semantic_guard = SemanticGuard()
-    sandwich_defense = SandwichDefense()
-    output_filter = OutputFilter()
-    permission_validator = PermissionValidator()
+    # Initialize defense components (all enabled by default, or subset for ablation)
+    _all = ["input_filter", "semantic_guard", "context_separation",
+            "instruction_hierarchy", "permission_validator", "output_filter"]
+    active = set(enabled_defenses) if enabled_defenses is not None else set(_all)
+
+    input_filter = InputFilter() if "input_filter" in active else None
+    semantic_guard = SemanticGuard() if "semantic_guard" in active else None
+    sandwich_defense = SandwichDefense() if "context_separation" in active else None
+    output_filter_obj = OutputFilter() if "output_filter" in active else None
+    permission_validator = PermissionValidator() if "permission_validator" in active else None
 
     # Tool schemas for LLM
     tool_schemas = [
@@ -83,9 +88,12 @@ def create_defended_agent(
 
         last_user = user_msgs[-1].content
 
-        # Run input filter
-        filter_result = input_filter.scan(last_user)
-        if filter_result.is_suspicious and filter_result.risk_score >= 0.8:
+        # Run input filter (if enabled)
+        if input_filter is None:
+            filter_result = None
+        else:
+            filter_result = input_filter.scan(last_user)
+        if filter_result and filter_result.is_suspicious and filter_result.risk_score >= 0.8:
             return {
                 "messages": [AIMessage(
                     content=f"I detected a potential prompt injection attempt in your message. "
@@ -96,9 +104,12 @@ def create_defended_agent(
                 "block_reason": f"Input filter: {filter_result.matched_patterns}",
             }
 
-        # Run semantic guard
-        guard_result = semantic_guard.classify(last_user)
-        if guard_result.is_malicious and guard_result.confidence >= 0.8:
+        # Run semantic guard (if enabled)
+        if semantic_guard is None:
+            guard_result = None
+        else:
+            guard_result = semantic_guard.classify(last_user)
+        if guard_result and guard_result.is_malicious and guard_result.confidence >= 0.8:
             return {
                 "messages": [AIMessage(
                     content=f"Your request appears to be attempting {guard_result.intent}. "
@@ -117,12 +128,17 @@ def create_defended_agent(
 
         messages = state.get("messages", [])
 
-        # Build messages with sandwich defense
+        # Build messages with sandwich defense (if enabled)
         msg_dicts = [_msg_to_dict(m) for m in messages if not isinstance(m, SystemMessage)]
-        defended_msgs = sandwich_defense.build_messages(msg_dicts)
+        if sandwich_defense:
+            defended_msgs = sandwich_defense.build_messages(msg_dicts)
+        else:
+            from src.agent.baseline import BASELINE_SYSTEM_PROMPT
+            defended_msgs = [{"role": "system", "content": BASELINE_SYSTEM_PROMPT}] + msg_dicts
 
-        # Apply instruction hierarchy
-        defended_msgs = enforce_hierarchy(defended_msgs)
+        # Apply instruction hierarchy (if enabled)
+        if "instruction_hierarchy" in active:
+            defended_msgs = enforce_hierarchy(defended_msgs)
 
         # Count tool rounds to prevent infinite loops
         tool_rounds = sum(1 for m in messages if isinstance(m, ToolMessage))
@@ -180,6 +196,8 @@ def create_defended_agent(
         blocked_tools = []
 
         for tc in last_msg.tool_calls:
+            if permission_validator is None:
+                continue
             result = permission_validator.validate(
                 user_role=user_role_str,
                 tool_name=tc["name"],
@@ -247,7 +265,9 @@ def create_defended_agent(
         if not isinstance(last_msg, AIMessage):
             return {}
 
-        result = output_filter.scan(last_msg.content)
+        if output_filter_obj is None:
+            return {}
+        result = output_filter_obj.scan(last_msg.content)
         if result.has_leak:
             # Replace the message with sanitized version
             sanitized_msg = AIMessage(content=result.sanitized_text)
