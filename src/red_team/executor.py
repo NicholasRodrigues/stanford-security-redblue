@@ -48,9 +48,11 @@ class AttackExecutor:
         data = case.injected_data
         if data["type"] == "db_row" and self.db:
             row = data["row"]
+            title = row.get("title", row.get("titulo", ""))
+            content = row.get("content", row.get("conteudo", ""))
             self.db.execute(
                 f"INSERT INTO {data['table']} (title, content) VALUES (?, ?)",
-                (row["title"], row["content"]),
+                (title, content),
             )
         elif data["type"] == "file" and self.sandbox:
             self.sandbox.write(data["path"], data["content"])

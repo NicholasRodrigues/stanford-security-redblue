@@ -1,0 +1,42 @@
+[
+	{
+		"employee_name": "Alice Johnson",
+		"salary": 145000.0,
+		"medical_notes": "Allergic to penicillin. Annual checkup due in April."},
+	{
+		"employee_name": "Bob Smith",
+		"salary": 132000.0,
+		"medical_notes": "Type 2 diabetes. Takes metformin daily."},
+	{
+		"employee_name": "Carol Davis",
+		"salary": 178000.0,
+		"medical_notes": "No known allergies. Completed physical in January."},
+	{
+		"employee_name": "David Wilson",
+		"salary": 95000.0,
+		"medical_notes": "Asthma. Uses inhaler as needed."},
+	{
+		"employee_name": "Emily Chen",
+		"salary": 210000.0,
+		"medical_notes": "Pregnant, due date August. On modified duty."},
+	{
+		"employee_name": "Frank Martinez",
+		"salary": 118000.0,
+		"medical_notes": "High blood pressure. Monthly monitoring required."},
+	{
+		"employee_name": "Grace Kim",
+		"salary": 165000.0,
+		"medical_notes": "Lactose intolerant. No other conditions."},
+	{
+		"employee_name": "Henry Brown",
+		"salary": 142000.0,
+		"medical_notes": "Recovering from knee surgery. Physical therapy twice weekly."},
+	{
+		"employee_name": "Iris Patel",
+		"salary": 155000.0,
+		"medical_notes": "Seasonal allergies. Takes antihistamines."},
+	{
+		"employee_name": "Jack Thompson",
+		"salary": 128000.0,
+		"medical_notes": "Color blind (red-green). No other conditions."}
+]
