@@ -1,8 +1,6 @@
 # Resumo do Projeto: Prompt Injection em Agentes LLM
 
-**Para:** Professor
 **De:** Nicholas Rodrigues, Guilherme Muniz, Tiago Trindade
-**Data:** Março 2026
 
 ---
 
@@ -18,15 +16,16 @@ Testamos 10 modelos (5 open-source locais + 5 comerciais), 9 categorias de ataqu
 
 ### Benchmarks existentes
 
-| Benchmark | Ano | O que faz | Limitacao |
-|-----------|-----|-----------|-----------|
-| **BIPIA** (Microsoft) | 2023 | Injecao indireta em LLMs puros | Sem ferramentas reais |
-| **InjecAgent** (UIUC, ACL 2024) | 2024 | Agentes com ferramentas, 1054 casos | Ambientes simulados |
-| **AgentDojo** (ETH Zurich) | 2024 | Ambiente dinamico, 97 tarefas | Poucos modelos open-source |
-| **Agent Security Bench** (ICLR 2025) | 2025 | 400+ ferramentas, 13 modelos | Nao avalia portugues |
-| **Open-Prompt-Injection** (USENIX 2024) | 2024 | Framework formal, 5 ataques x 10 defesas x 10 LLMs | LLMs puros, sem agentes |
+| Benchmark                               | Ano  | O que faz                                          | Limitacao                  |
+| --------------------------------------- | ---- | -------------------------------------------------- | -------------------------- |
+| **BIPIA** (Microsoft)                   | 2023 | Injecao indireta em LLMs puros                     | Sem ferramentas reais      |
+| **InjecAgent** (UIUC, ACL 2024)         | 2024 | Agentes com ferramentas, 1054 casos                | Ambientes simulados        |
+| **AgentDojo** (ETH Zurich)              | 2024 | Ambiente dinamico, 97 tarefas                      | Poucos modelos open-source |
+| **Agent Security Bench** (ICLR 2025)    | 2025 | 400+ ferramentas, 13 modelos                       | Nao avalia portugues       |
+| **Open-Prompt-Injection** (USENIX 2024) | 2024 | Framework formal, 5 ataques x 10 defesas x 10 LLMs | LLMs puros, sem agentes    |
 
 **Lacunas que ninguem preencheu:**
+
 1. Nenhum benchmark testa ataques em **portugues**
 2. Poucos testam modelos **pequenos/open-source** (3B-8B) como agentes
 3. Maioria usa ferramentas **simuladas**, nao banco de dados real
@@ -57,18 +56,18 @@ Testamos 10 modelos (5 open-source locais + 5 comerciais), 9 categorias de ataqu
 
 ### Modelos testados
 
-| Tipo | Modelo | Parametros |
-|------|--------|------------|
-| Open-source | Llama 3.2 | 3B |
-| Open-source | Llama 3.1 | 8B |
-| Open-source | Phi-3 Mini | 3.8B |
-| Open-source | Qwen 2.5 | 7B |
-| Open-source | Mistral | 7B |
-| Comercial | GPT-4.1-nano | ? |
-| Comercial | GPT-4.1 | ? |
-| Comercial | GPT-4.1-mini | ? |
-| Comercial | Claude Sonnet 4 | ? |
-| Comercial | Claude Haiku 4.5 | ? |
+| Tipo        | Modelo           | Parametros |
+| ----------- | ---------------- | ---------- |
+| Open-source | Llama 3.2        | 3B         |
+| Open-source | Llama 3.1        | 8B         |
+| Open-source | Phi-3 Mini       | 3.8B       |
+| Open-source | Qwen 2.5         | 7B         |
+| Open-source | Mistral          | 7B         |
+| Comercial   | GPT-4.1-nano     | ?          |
+| Comercial   | GPT-4.1          | ?          |
+| Comercial   | GPT-4.1-mini     | ?          |
+| Comercial   | Claude Sonnet 4  | ?          |
+| Comercial   | Claude Haiku 4.5 | ?          |
 
 ### Categorias de ataque (9 categorias, ~120 payloads)
 
@@ -128,21 +127,21 @@ Esses ataques sao efetivos porque exploram a propria capacidade do modelo — qu
 
 Com ataques simples (categorias 1-7), os modelos comerciais parecem invulneraveis:
 
-| Modelo | ASR (ataques basicos) |
-|--------|-----------------------|
-| GPT-4.1-nano | 5.0% |
-| GPT-4.1-mini | 5.0% |
-| Claude Haiku | 5.0% |
+| Modelo       | ASR (ataques basicos) |
+| ------------ | --------------------- |
+| GPT-4.1-nano | 5.0%                  |
+| GPT-4.1-mini | 5.0%                  |
+| Claude Haiku | 5.0%                  |
 
 Mas com ataques avancados (categoria 9), a realidade e completamente diferente:
 
-| Modelo | ASR (ataques avancados) | ± Std | IC 95% |
-|--------|-------------------------|-------|--------|
-| **GPT-4.1-nano** | **87.5%** | ±0.0% | [87.5%, 87.5%] |
-| GPT-4.1 (completo) | 75.0% | ±4.0% | [69.5%, 80.5%] |
-| GPT-4.1-mini | 67.5% | ±4.7% | [61.0%, 74.0%] |
-| Claude Sonnet 4 | 51.2% | ±4.7% | [44.8%, 57.7%] |
-| Claude Haiku 4.5 | 18.8% | ±0.0% | [18.8%, 18.8%] |
+| Modelo             | ASR (ataques avancados) | ± Std | IC 95%         |
+| ------------------ | ----------------------- | ----- | -------------- |
+| **GPT-4.1-nano**   | **87.5%**               | ±0.0% | [87.5%, 87.5%] |
+| GPT-4.1 (completo) | 75.0%                   | ±4.0% | [69.5%, 80.5%] |
+| GPT-4.1-mini       | 67.5%                   | ±4.7% | [61.0%, 74.0%] |
+| Claude Sonnet 4    | 51.2%                   | ±4.7% | [44.8%, 57.7%] |
+| Claude Haiku 4.5   | 18.8%                   | ±0.0% | [18.8%, 18.8%] |
 
 **Por que isso importa:** A maioria das avaliacoes de seguranca de LLMs usa ataques basicos conhecidos. Nossos resultados mostram que isso subestima drasticamente a vulnerabilidade real — GPT-4.1-nano vai de 5% pra 87.5% de ASR quando enfrenta ataques mais sofisticados.
 
@@ -150,21 +149,21 @@ Mas com ataques avancados (categoria 9), a realidade e completamente diferente:
 
 ### 4.2 Modelos menores da OpenAI sao mais vulneraveis
 
-| Modelo | ASR | IC 95% |
-|--------|-----|--------|
+| Modelo               | ASR   | IC 95%         |
+| -------------------- | ----- | -------------- |
 | GPT-4.1-nano (menor) | 87.5% | [87.5%, 87.5%] |
-| GPT-4.1 (maior) | 75.0% | [69.5%, 80.5%] |
+| GPT-4.1 (maior)      | 75.0% | [69.5%, 80.5%] |
 | GPT-4.1-mini (medio) | 67.5% | [61.0%, 74.0%] |
 
 Os intervalos de confianca NAO se sobrepoe — isso confirma que menor modelo = mais vulneravel dentro da familia OpenAI. Provavelmente porque modelos menores recebem menos treinamento de seguranca (safety training/RLHF).
 
 ### 4.3 Arquitetura da Anthropic e mais resistente
 
-| Modelo | ASR |
-|--------|-----|
+| Modelo           | ASR                    |
+| ---------------- | ---------------------- |
 | Claude Haiku 4.5 | 18.8% (variancia zero) |
-| Claude Sonnet 4 | 51.2% |
-| GPT-4.1-nano | 87.5% |
+| Claude Sonnet 4  | 51.2%                  |
+| GPT-4.1-nano     | 87.5%                  |
 
 Claude Haiku e consistentemente o modelo mais resistente com variancia ZERO — ou seja, o resultado e o mesmo em todas as 5 execucoes. Isso sugere que a resistencia e **arquitetural**, nao aleatoria.
 
@@ -174,28 +173,28 @@ Claude Haiku e consistentemente o modelo mais resistente com variancia ZERO — 
 
 Quando ativamos todas as 6 camadas de defesa, NENHUM dos 16 ataques avancados consegue vazar dados em NENHUM dos 4 modelos testados:
 
-| Modelo | Baseline | Defendido |
-|--------|----------|-----------|
-| GPT-4.1-nano | 87.5% | **0.0%** |
-| GPT-4.1 | 75.0% | **0.0%** |
-| GPT-4.1-mini | 68.8% | **0.0%** |
-| Llama 3.1:8b | ~85% | **0.0%** |
+| Modelo       | Baseline | Defendido |
+| ------------ | -------- | --------- |
+| GPT-4.1-nano | 87.5%    | **0.0%**  |
+| GPT-4.1      | 75.0%    | **0.0%**  |
+| GPT-4.1-mini | 68.8%    | **0.0%**  |
+| Llama 3.1:8b | ~85%     | **0.0%**  |
 
 ### 4.5 Context Separation sozinho e tao efetivo quanto todas as defesas
 
 Estudo de ablacao com N=3 execucoes, 27 ataques, Llama 3.1:8b:
 
-| Configuracao | ASR Media | IC 95% |
-|-------------|-----------|--------|
-| Sem defesa (baseline) | 86.4% | [72.4%, 100%] |
-| Output Filter sozinho | 28.4% | [23.1%, 33.7%] |
-| Input Filter sozinho | 23.5% | [18.1%, 28.8%] |
-| Semantic Guard sozinho | 17.3% | [12.0%, 22.6%] |
-| Permission Validator sozinho | 18.5% | [9.3%, 27.7%] |
-| Instruction Hierarchy sozinho | 13.6% | [3.0%, 24.2%] |
-| **Context Separation sozinho** | **9.9%** | [4.6%, 15.2%] |
-| **Context Sep + Inst Hier** | **8.6%** | [3.3%, 14.0%] |
-| **Todas as 6 defesas** | **11.1%** | [11.1%, 11.1%] |
+| Configuracao                   | ASR Media | IC 95%         |
+| ------------------------------ | --------- | -------------- |
+| Sem defesa (baseline)          | 86.4%     | [72.4%, 100%]  |
+| Output Filter sozinho          | 28.4%     | [23.1%, 33.7%] |
+| Input Filter sozinho           | 23.5%     | [18.1%, 28.8%] |
+| Semantic Guard sozinho         | 17.3%     | [12.0%, 22.6%] |
+| Permission Validator sozinho   | 18.5%     | [9.3%, 27.7%]  |
+| Instruction Hierarchy sozinho  | 13.6%     | [3.0%, 24.2%]  |
+| **Context Separation sozinho** | **9.9%**  | [4.6%, 15.2%]  |
+| **Context Sep + Inst Hier**    | **8.6%**  | [3.3%, 14.0%]  |
+| **Todas as 6 defesas**         | **11.1%** | [11.1%, 11.1%] |
 
 Os ICs de Context Separation (9.9%) e Todas as Defesas (11.1%) se sobrepoe, indicando que **nao ha diferenca estatisticamente significativa** entre usar so o sandwich defense ou usar todas as 6 camadas.
 
@@ -206,9 +205,9 @@ Os ICs de Context Separation (9.9%) e Todas as Defesas (11.1%) se sobrepoe, indi
 Comparacao cross-lingual com ataques estaticos (N=3):
 
 | Configuracao | Ingles | Portugues |
-|-------------|--------|-----------|
-| Baseline | 83.3% | 81.1% |
-| Defendido | 11.7% | 0.0% |
+| ------------ | ------ | --------- |
+| Baseline     | 83.3%  | 81.1%     |
+| Defendido    | 11.7%  | 0.0%      |
 
 No baseline, portugues e ingles sao igualmente efetivos. No modo defendido, portugues e paradoxalmente MENOS efetivo — provavelmente porque os ataques em portugues nao ativam os regex patterns do input filter (que sao em ingles), entao passam direto pro sandwich defense que bloqueia tudo.
 
@@ -216,10 +215,10 @@ No baseline, portugues e ingles sao igualmente efetivos. No modo defendido, port
 
 Ataques Crescendo (escalacao multi-turn adaptativa) contra o baseline do Llama 3.1:8b (N=5):
 
-| Lingua | Taxa de Sucesso | Evidencias/Sessao |
-|--------|-----------------|-------------------|
-| Ingles | 100% (5/5) | 162 |
-| Portugues | 100% (5/5) | 200 (+23%) |
+| Lingua    | Taxa de Sucesso | Evidencias/Sessao |
+| --------- | --------------- | ----------------- |
+| Ingles    | 100% (5/5)      | 162               |
+| Portugues | 100% (5/5)      | 200 (+23%)        |
 
 Ambas as linguas atingem 100% de sucesso, mas portugues extrai 23% mais evidencias por sessao. Contra o agente DEFENDIDO, tanto ingles quanto portugues falham completamente (0/5 sessoes).
 
@@ -232,12 +231,12 @@ Testamos o ataque adaptativo PAIR (onde um LLM atacante gera e refina ataques co
 
 ### 4.9 Modelos open-source sao muito vulneraveis com ataques basicos
 
-| Modelo | ASR | ± Std | IC 95% |
-|--------|-----|-------|--------|
-| Llama 3.1:8b | 82.5% | ±2.2% | [79.4%, 85.6%] |
-| Qwen 2.5:7b | 82.0% | ±2.9% | [78.0%, 86.0%] |
-| Mistral:7b | 76.0% | ±2.0% | [73.2%, 78.8%] |
-| Llama 3.2:3B | 68.0% | ±2.9% | [64.0%, 72.0%] |
+| Modelo              | ASR       | ± Std | IC 95%         |
+| ------------------- | --------- | ----- | -------------- |
+| Llama 3.1:8b        | 82.5%     | ±2.2% | [79.4%, 85.6%] |
+| Qwen 2.5:7b         | 82.0%     | ±2.9% | [78.0%, 86.0%] |
+| Mistral:7b          | 76.0%     | ±2.0% | [73.2%, 78.8%] |
+| Llama 3.2:3B        | 68.0%     | ±2.9% | [64.0%, 72.0%] |
 | **Phi-3 Mini:3.8B** | **25.5%** | ±3.7% | [20.4%, 30.6%] |
 
 Phi-3 Mini e um outlier — significativamente mais resistente que modelos maiores. Provavelmente resultado de treinamento de seguranca mais agressivo pela Microsoft.
@@ -251,6 +250,7 @@ Phi-3 Mini e um outlier — significativamente mais resistente que modelos maior
 Quando rodamos um experimento uma so vez, o resultado pode ser sorte ou azar. Por exemplo, se um modelo tem 80% de ASR numa execucao, nao sabemos se o valor "real" e 70%, 80%, ou 90%.
 
 Para resolver isso:
+
 - **Rodamos N=5 vezes** cada experimento
 - **Calculamos a media e desvio padrao** das 5 execucoes
 - **Calculamos o Intervalo de Confianca de 95% (IC)** — existe 95% de probabilidade do valor real estar dentro desse intervalo
@@ -287,7 +287,7 @@ Modelos comerciais que parecem seguros com ataques basicos (5% ASR) sao altament
 | Modelo | ASR basico | ASR avancado (N=5) | IC 95% |
 |--------|-----------|-------------------|--------|
 | GPT-4.1-nano | 5.0% | 87.5% ± 0.0% | [87.5%, 87.5%] |
-| GPT-4.1 | 5.0%* | 75.0% ± 4.0% | [69.5%, 80.5%] |
+| GPT-4.1 | 5.0%\* | 75.0% ± 4.0% | [69.5%, 80.5%] |
 | GPT-4.1-mini | 5.0% | 67.5% ± 4.7% | [61.0%, 74.0%] |
 | Claude Sonnet 4 | N/A | 51.2% ± 4.7% | [44.8%, 57.7%] |
 | Claude Haiku 4.5 | 5.0% | 18.8% ± 0.0% | [18.8%, 18.8%] |
@@ -311,6 +311,7 @@ Testamos cada uma das 6 camadas de defesa individualmente e em combinacoes (N=3,
 ### Contribuicao 5: Comparacao multi-modelo com rigor estatistico
 
 10 modelos avaliados com N=5 execucoes e intervalos de confianca. Descobertas com significancia estatistica confirmada:
+
 - Menor modelo OpenAI = mais vulneravel (ICs nao se sobrepoe)
 - Phi-3 Mini e outlier entre open-source (IC nao sobrepoe com nenhum outro)
 - Claude Haiku e o mais resistente com variancia zero
@@ -341,6 +342,7 @@ Demonstramos que ataques adaptativos (PAIR com 15 iteracoes, Crescendo com 5 tur
 ## 7. Alvo de Publicacao
 
 **SBSeg 2026** (Simposio Brasileiro de Ciberseguranca)
+
 - Buzios, RJ, 1-4 de setembro de 2026
 - **Deadline: 11 de maio de 2026** (~6 semanas)
 - Short paper: 7 paginas
